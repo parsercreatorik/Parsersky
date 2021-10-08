@@ -4,6 +4,7 @@ try:
     from time import sleep
     import os
     import requests
+    import shutil
 
     print("Эта программа находится в тестировании!")
 
@@ -57,8 +58,7 @@ try:
             print("Есть обновление, не хотите обновиться? (y/n)")
             chse = input("> ").strip().lower()
             if chse == "y":
-                print("Удалите файл .git!")
-                print("Нажмите Enter когда удалите...")
+                shutil.rmtree(".git")
                 input("")
                 # Обновление
                 path = os.getcwd()
