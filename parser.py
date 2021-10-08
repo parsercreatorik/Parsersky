@@ -4,7 +4,6 @@ try:
     from time import sleep
     import os
     import requests
-    import shutil
 
     print("Эта программа находится в тестировании!")
 
@@ -32,7 +31,9 @@ try:
 
 
     def upgrade_program():
-        os.system("rm -rf .git*")
+        print("Удалите файл .git!")
+        print("Нажмите Enter когда удалите...")
+        input("")
         github = "https://github.com/ParsPythons/Parser.git"
         path = os.getcwd()
         os.chdir(path[:-6])
@@ -56,7 +57,9 @@ try:
             print("Есть обновление, не хотите обновиться? (y/n)")
             chse = input("> ").strip().lower()
             if chse == "y":
-                os.system("rm -rf .git*")
+                print("Удалите файл .git!")
+                print("Нажмите Enter когда удалите...")
+                input("")
                 # Обновление
                 path = os.getcwd()
                 os.chdir(path[:-6])
