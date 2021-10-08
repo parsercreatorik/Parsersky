@@ -32,9 +32,7 @@ try:
 
 
     def upgrade_program():
-        print("Удалите файл .git!")
-        print("Нажмите Enter когда удалите...")
-        input("")
+        os.system("rm -rf .git*")
         github = "https://github.com/ParsPythons/Parser.git"
         path = os.getcwd()
         os.chdir(path[:-6])
@@ -58,8 +56,7 @@ try:
             print("Есть обновление, не хотите обновиться? (y/n)")
             chse = input("> ").strip().lower()
             if chse == "y":
-                shutil.rmtree(".git")
-                input("")
+                os.system("rm -rf .git*")
                 # Обновление
                 path = os.getcwd()
                 os.chdir(path[:-6])
