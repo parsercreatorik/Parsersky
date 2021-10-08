@@ -1,40 +1,41 @@
 try:
 
+    # Импорт модулей
     from bs4 import BeautifulSoup as BS
     from time import sleep
     import os
-    import requests
+    from requests import get
 
     print("Эта программа находится в тестировании!")
 
-    request = requests.get("https://yandex.ru").text
+    github = "https://github.com/ParsPythons/Parser.git"
+    ver_txt = "https://github.com/ParsPythons/Parser/blob/main/version.txt"
 
 
     # Начинаются функции
+
+    # Делаем выбор источника...
     def choise_source_site():
         print("Яндекс (Y) или Google (G) ?: ")
         choise = input("> ").strip().lower()
         if choise == "y":
             return "yandex"
-        else:
-            return "google"
 
 
+    # Проверка подключения к сети
     def check_wifi():
-        # Проверка подключения к сети
         try:
-            requests.get("https://www.yandex.ru/")
+            get("https://www.duckduckgo.com/")
             return True
+
         except:
             print("Сеть вай фай не обнаружена!!!")
             return False
 
 
+    # Переустановка программы
     def upgrade_program():
-        print("Удалите файл .git!")
-        print("Нажмите Enter когда удалите...")
-        input("")
-        github = "https://github.com/ParsPythons/Parser.git"
+        os.system("rm -rf .git")
         path = os.getcwd()
         os.chdir(path[:-6])
         os.system("rm -R Parser")
@@ -42,25 +43,22 @@ try:
         os.chdir(path)
 
 
+    # Проверка обновлений
     def check_version():
-        # Проверка обновлений
-        ver_txt = "https://github.com/ParsPythons/Parser/blob/main/version.txt"
-        github = "https://github.com/ParsPythons/Parser.git"
-        ver = requests.get(ver_txt).text
+        ver = get(ver_txt).text
         sop = BS(ver, "html.parser")
         version = sop.find("td", class_="blob-code blob-code-inner js-file-line").text
+        version = version.strip()
         with open("version.txt", "r") as vers:
             only_ver = vers.read()
+        only_ver = only_ver.strip()
         print(f"Текущая версия: {only_ver}")
         print(f"Версия на сайте: {version}")
-        if version != only_ver.strip():
+        if version != only_ver:
             print("Есть обновление, не хотите обновиться? (y/n)")
             chse = input("> ").strip().lower()
             if chse == "y":
-                print("Удалите файл .git!")
-                print("Нажмите Enter когда удалите...")
-                input("")
-                # Обновление
+                os.system("rm -rf .git")
                 path = os.getcwd()
                 os.chdir(path[:-6])
                 print("Идёт обновление, подождите...")
@@ -71,36 +69,39 @@ try:
                     new_ver.write(version)
 
 
+    # Очистка консоли
     def clear_news():
         os.system("clear")
 
 
+    # Записываем время ожидания
     def sleep_func(secn):
         if secn == "":
             print("Ошибка 001!")
             print("Измините время ожидания!!!")
 
-        with open("sleep_time.txt", "w") as file:
-            file.write(secn)
-        print("Закончено!")
+        if secn != "":
+            with open("sleep_time.txt", "w") as file:
+                file.write(secn)
+            print("Закончено!")
+            timed = sleep_time()
 
 
+    # Узнаём время ожидания
     def sleep_time():
         with open("sleep_time.txt", "r") as file:
-            times = file.read()
+            timek = file.read()
         try:
-            times = int(times.strip())
+            times = int(timek.strip())
             return times
         except:
             print("Ошибка 002!")
             print("Измините время ожидания!!!")
 
 
-    timed = sleep_time()
-
-
+    # Новости России
     def google_russia_news(x=1):
-        response = requests.get(
+        response = get(
             "https://news.google.com/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNRFppYm5vU0FuSjFLQUFQAQ?hl=ru&gl=RU&ceid=RU%3Aru").text
         sup = BS(response, "html.parser")
 
@@ -114,8 +115,9 @@ try:
             x += 1
 
 
+    # Новости из мира
     def google_world_news(x=1):
-        response = requests.get(
+        response = get(
             "https://news.google.com/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FuSjFHZ0pTVlNnQVAB?hl=ru&gl=RU&ceid=RU%3Aru").text
         sup = BS(response, "html.parser")
 
@@ -129,6 +131,7 @@ try:
             x += 1
 
 
+    # Из главной странички Яндекса достаём новости
     def parse_main_page(x=1):
         # Задействуем библиотеку bs4
         soup = BS(request, "html.parser")
@@ -150,12 +153,13 @@ try:
                 x += 1
 
 
+    # Достаём новости из СМИ (Яндекс)
     def print_smi_news(x=1):
         soup = BS(request, "html.parser")
         url = soup.find("a",
                         class_="home-link2 home-link2_color_blue home-link2_hover_red news__tab news__tab_selected_yes mix-tabber__tab mix-tabber__tab_selected_yes")
         sublink = url.get("href")
-        recponce = requests.get(sublink).text
+        recponce = get(sublink).text
         sup = BS(recponce, "html.parser")
         SMI = sup.find_all("a", class_="mg-card__link")
         for newsmi in SMI:
@@ -171,14 +175,16 @@ try:
     Wifi = check_wifi()
     che = choise_source_site()
     check_version()
+    timed = sleep_time()
 
     bol = True
 
     # Цикл
     while bol:
-        if Wifi == True:
+        if Wifi:
             # Выбор пользователя
             if che == "yandex":
+                request = get("https://yandex.ru").text
                 print("Вывести новости с главной страницы 'Яндекс' (1)")
                 print("Вывести новости СМИ (2)")
                 print("Задать время ожидания (3)")
@@ -241,10 +247,14 @@ try:
 
                 else:
                     bol = False
+        
+        if not Wifi:
+            print("Сеть wifi не обнаружена!!!")
+            print("Выход...")
 
 except Exception as Except:
     bol = False
     print("Возникла ошибка при выполнении программы")
     print("Перезапустите программу!")
     print("Ошибка: " + str(Except))
-    input()
+    print("")
