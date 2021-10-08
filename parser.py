@@ -8,8 +8,8 @@ try:
 
     print("Эта программа находится в тестировании!")
 
-    github = "https://github.com/ParsPythons/Parser.git"
-    ver_txt = "https://github.com/ParsPythons/Parser/blob/main/version.txt"
+    github = "https://github.com/parsercreatorik/Parsersky.git"
+    ver_txt = "https://github.com/parsercreatorik/Parsersky/blob/main/version.txt"
 
 
     # Начинаются функции
